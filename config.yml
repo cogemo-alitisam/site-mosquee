@@ -1,0 +1,50 @@
+backend:
+  name: github
+  repo: VOTRE-COMPTE/VOTRE-DEPOT
+  branch: main
+
+# IMPORTANT : remplacez "VOTRE-COMPTE/VOTRE-DEPOT" ci-dessus par le vrai
+# chemin de votre dépôt GitHub une fois créé, par exemple :
+# repo: mosqueealitisam/site-mosquee
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+locale: "fr"
+
+collections:
+  - name: "contenu"
+    label: "Contenu du site"
+    files:
+      - name: "annonce"
+        label: "Annonce mise en avant"
+        file: "content/announcement.json"
+        fields:
+          - { label: "Étiquette", name: "tag", widget: "string", default: "Annonce" }
+          - { label: "Texte de l'annonce", name: "text", widget: "text" }
+
+      - name: "actualites"
+        label: "Actualités"
+        file: "content/news.json"
+        fields:
+          - label: "Articles"
+            name: "items"
+            widget: "list"
+            summary: "{{title}} — {{date}}"
+            fields:
+              - { label: "Titre", name: "title", widget: "string" }
+              - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+              - { label: "Texte court", name: "excerpt", widget: "text" }
+
+      - name: "galerie"
+        label: "Galerie photo"
+        file: "content/gallery.json"
+        fields:
+          - label: "Photos"
+            name: "items"
+            widget: "list"
+            summary: "{{category}}"
+            fields:
+              - { label: "Catégorie", name: "category", widget: "string" }
+              - { label: "Photo", name: "image", widget: "image", required: false }
+              - { label: "Légende", name: "caption", widget: "string", required: false }

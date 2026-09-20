@@ -1,0 +1,10 @@
+{
+  "items": [
+    { "category": "Architecture", "image": "", "caption": "Photo à ajouter" },
+    { "category": "Communauté",   "image": "", "caption": "Photo à ajouter" },
+    { "category": "Ramadan",      "image": "", "caption": "Photo à ajouter" },
+    { "category": "Aïd",          "image": "", "caption": "Photo à ajouter" },
+    { "category": "Cours",        "image": "", "caption": "Photo à ajouter" },
+    { "category": "Activités",    "image": "", "caption": "Photo à ajouter" }
+  ]
+}
