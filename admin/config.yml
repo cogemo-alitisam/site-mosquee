@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: repo: cogemo-alitisam/site-mosquee
+  repo: cogemo-alitisam/site-mosquee
   branch: main
 
 # IMPORTANT : remplacez "VOTRE-COMPTE/VOTRE-DEPOT" ci-dessus par le vrai
