@@ -3,10 +3,6 @@ backend:
   repo: cogemo-alitisam/site-mosquee
   branch: main
 
-# IMPORTANT : remplacez "VOTRE-COMPTE/VOTRE-DEPOT" ci-dessus par le vrai
-# chemin de votre dépôt GitHub une fois créé, par exemple :
-# repo: mosqueealitisam/site-mosquee
-
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
@@ -48,3 +44,21 @@ collections:
               - { label: "Catégorie", name: "category", widget: "string" }
               - { label: "Photo", name: "image", widget: "image", required: false }
               - { label: "Légende", name: "caption", widget: "string", required: false }
+
+      - name: "organisation"
+        label: "Organisation interne (COGEMO)"
+        file: "content/organisation.json"
+        fields:
+          - { label: "Président", name: "president", widget: "string", required: false }
+          - { label: "Vice-président", name: "vice_president", widget: "string", required: false }
+          - { label: "Secrétaire", name: "secretaire", widget: "string", required: false }
+          - { label: "Imam", name: "imam", widget: "string", required: false }
+
+      - name: "reseaux"
+        label: "Réseaux sociaux"
+        file: "content/social.json"
+        fields:
+          - { label: "Chaîne YouTube (URL complète)", name: "youtube", widget: "string", required: false, hint: "Laisser vide pour ne pas afficher le lien" }
+          - { label: "Compte TikTok (URL complète)", name: "tiktok", widget: "string", required: false }
+          - { label: "Chaîne WhatsApp (URL complète)", name: "whatsapp", widget: "string", required: false }
+          - { label: "Canal Telegram (URL complète)", name: "telegram", widget: "string", required: false }
