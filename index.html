@@ -366,6 +366,12 @@
   .card-body{padding:22px 24px 28px;}
   .card-body h3{margin-bottom:8px;}
   .card-body p{font-size:.95rem; margin-bottom:0;}
+  .card-social{display:flex; gap:14px; margin-top:14px;}
+  .card-social a{
+    font-size:.85rem; font-weight:600; color:var(--green-deep); text-decoration:none;
+    border-bottom:1.5px solid var(--gold);
+  }
+  .card-social a:hover{color:var(--gold);}
 
   @media (max-width:900px){.cards{grid-template-columns:1fr 1fr;}}
   @media (max-width:600px){.cards{grid-template-columns:1fr;}}
@@ -380,8 +386,11 @@
   .future-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
   .future-item{
     text-align:center; padding:18px 10px; border:1px dashed var(--line); border-radius:14px;
-    color:var(--ink-soft); font-size:.86rem;
+    color:var(--ink-soft); font-size:.86rem; text-decoration:none; display:block;
   }
+  .future-item small{ color:var(--ink-soft); font-size:.72rem; }
+  a.future-item{ border-style:solid; border-color:var(--gold-light); color:var(--green-deep); font-weight:600; }
+  a.future-item:hover{ background:var(--green-pale); }
   .future-item .dot{
     display:inline-block; width:7px; height:7px; border-radius:50%;
     background:var(--gold-light); margin-bottom:8px;
@@ -612,11 +621,11 @@
       </div>
       <div class="about-block">
         <h3><span class="bullet"></span>Organisation interne</h3>
-        <ul class="org-list">
-          <li><span>Président</span><span>El Hadj Issa Parkouda</span></li>
-          <li><span>Vice-président, chargé de la trésorerie</span><span>Dr Yézidou Ali</span></li>
-          <li><span>Secrétaire</span><span>M. Aboubakar Ibrahime</span></li>
-          <li><span>Imam</span><span>À compléter</span></li>
+        <ul class="org-list" id="orgList">
+          <li><span>Président</span><span id="orgPresident">El Hadj Issa Parkouda</span></li>
+          <li><span>Vice-président, chargé de la trésorerie</span><span id="orgVp">Dr Yézidou Ali</span></li>
+          <li><span>Secrétaire</span><span id="orgSecretaire">M. Aboubakar Ibrahime</span></li>
+          <li><span>Imam</span><span id="orgImam">À compléter</span></li>
         </ul>
       </div>
     </div>
@@ -638,6 +647,10 @@
         <div class="card-body">
           <h3>Conférences religieuses</h3>
           <p>Chaque semaine, un rappel ou une conférence anime la mosquée après une prière, sur des thèmes de vie quotidienne à la lumière du Coran et de la Sunna.</p>
+          <div class="card-social" id="conferenceSocial">
+            <a id="linkYoutube" href="#" target="_blank" rel="noopener" style="display:none;">▶ YouTube</a>
+            <a id="linkTiktok" href="#" target="_blank" rel="noopener" style="display:none;">♪ TikTok</a>
+          </div>
         </div>
       </div>
       <div class="card">
@@ -661,12 +674,12 @@
     </div>
 
     <div class="future-strip">
-      <h4>Fonctionnalités prévues prochainement sur le site</h4>
+      <h4>Retrouvez-nous aussi</h4>
       <div class="future-grid">
-        <div class="future-item"><span class="dot"></span><br>Dons en ligne</div>
-        <div class="future-item"><span class="dot"></span><br>Espace membres</div>
-        <div class="future-item"><span class="dot"></span><br>Vidéos de conférences</div>
-        <div class="future-item"><span class="dot"></span><br>WhatsApp / Telegram</div>
+        <div class="future-item"><span class="dot"></span><br>Dons en ligne<br><small>(bientôt disponible)</small></div>
+        <div class="future-item"><span class="dot"></span><br>Espace membres<br><small>(bientôt disponible)</small></div>
+        <a class="future-item" id="linkWhatsapp" href="#" target="_blank" rel="noopener" style="display:none;"><span class="dot"></span><br>WhatsApp</a>
+        <a class="future-item" id="linkTelegram" href="#" target="_blank" rel="noopener" style="display:none;"><span class="dot"></span><br>Telegram</a>
       </div>
     </div>
   </div>
@@ -888,6 +901,32 @@
         el.innerHTML = `<span class="cat">${item.category || ''}</span><span>${item.caption || 'Photo à ajouter'}</span>`;
       }
       grid.appendChild(el);
+    });
+  }).catch(() => {});
+
+  fetch('content/organisation.json').then(r => r.ok ? r.json() : null).then(data => {
+    if(!data) return;
+    if(data.president) document.getElementById('orgPresident').textContent = data.president;
+    if(data.vice_president) document.getElementById('orgVp').textContent = data.vice_president;
+    if(data.secretaire) document.getElementById('orgSecretaire').textContent = data.secretaire;
+    if(data.imam) document.getElementById('orgImam').textContent = data.imam;
+  }).catch(() => {});
+
+  fetch('content/social.json').then(r => r.ok ? r.json() : null).then(data => {
+    if(!data) return;
+    const map = {
+      linkYoutube: data.youtube,
+      linkTiktok: data.tiktok,
+      linkWhatsapp: data.whatsapp,
+      linkTelegram: data.telegram
+    };
+    Object.keys(map).forEach(id => {
+      const url = map[id];
+      const el = document.getElementById(id);
+      if(url && el){
+        el.href = url;
+        el.style.display = '';
+      }
     });
   }).catch(() => {});
 
