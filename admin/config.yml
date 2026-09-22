@@ -12,6 +12,18 @@ collections:
   - name: "contenu"
     label: "Contenu du site"
     files:
+      - name: "accueil"
+        label: "Textes : accueil, mot de bienvenue, histoire"
+        file: "content/about.json"
+        fields:
+          - { label: "Sous-titre de l'accueil (sous le grand titre)", name: "hero_lede", widget: "text" }
+          - { label: "Mot de bienvenue du COGEMO (français)", name: "welcome_fr", widget: "text" }
+          - { label: "Mot de bienvenue du COGEMO (arabe)", name: "welcome_ar", widget: "text", required: false }
+          - label: "Notre histoire"
+            name: "histoire"
+            widget: "text"
+            hint: "Séparez chaque paragraphe par une ligne vide."
+
       - name: "annonce"
         label: "Annonce mise en avant"
         file: "content/announcement.json"
@@ -49,10 +61,13 @@ collections:
         label: "Organisation interne (COGEMO)"
         file: "content/organisation.json"
         fields:
-          - { label: "Président", name: "president", widget: "string", required: false }
-          - { label: "Vice-président", name: "vice_president", widget: "string", required: false }
-          - { label: "Secrétaire", name: "secretaire", widget: "string", required: false }
-          - { label: "Imam", name: "imam", widget: "string", required: false }
+          - label: "Membres"
+            name: "items"
+            widget: "list"
+            summary: "{{role}} — {{name}}"
+            fields:
+              - { label: "Fonction", name: "role", widget: "string" }
+              - { label: "Nom", name: "name", widget: "string" }
 
       - name: "reseaux"
         label: "Réseaux sociaux"
@@ -62,3 +77,13 @@ collections:
           - { label: "Compte TikTok (URL complète)", name: "tiktok", widget: "string", required: false }
           - { label: "Chaîne WhatsApp (URL complète)", name: "whatsapp", widget: "string", required: false }
           - { label: "Canal Telegram (URL complète)", name: "telegram", widget: "string", required: false }
+
+      - name: "youtube"
+        label: "Al-I'tisâm TV (chaîne YouTube)"
+        file: "content/youtube.json"
+        fields:
+          - label: "ID de la chaîne YouTube"
+            name: "channel_id"
+            widget: "string"
+            required: false
+            hint: "Commence par UC... — voir YouTube Studio > Paramètres > Chaîne > Avancé"
