@@ -207,6 +207,25 @@
   .arcade path{fill:var(--green-deep);}
   .arcade.flip{transform:scaleY(-1);}
 
+  /* ============================= DATEBAR (horloge / calendrier) ============================= */
+  .datebar{ background:var(--green-deep); }
+  .datebar-inner{
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    padding:10px 24px; flex-wrap:wrap; text-align:center;
+  }
+  .datebar-clock{
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:1.15rem;
+    color:var(--gold-light); font-variant-numeric:tabular-nums; letter-spacing:.02em;
+  }
+  .datebar-date{ color:#CFE3D6; font-size:.85rem; }
+  .datebar-hijri{ color:var(--gold-light); }
+  .datebar-sep{ color:rgba(255,255,255,0.3); }
+  @media (max-width:560px){
+    .datebar-inner{gap:8px;}
+    .datebar-sep:last-of-type{display:none;}
+    .datebar-hijri{width:100%; order:5;}
+  }
+
   /* ============================= WELCOME (mot de bienvenue) ============================= */
   .welcome{
     background: var(--green-pale);
@@ -420,6 +439,27 @@
   @media (max-width:860px){.gal-grid{grid-template-columns:1fr 1fr;}}
   @media (max-width:520px){.gal-grid{grid-template-columns:1fr;}}
 
+  /* ============================= AL-I'TISÂM TV ============================= */
+  .tv{background:var(--green-pale);}
+  .tv-actions{
+    display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:32px;
+  }
+  .tv-dot{
+    display:inline-block; width:9px; height:9px; border-radius:50%;
+    background:#ff3b3b; margin-right:6px; animation:tvPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes tvPulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .tv-player{
+    max-width:800px; margin:0 auto; border-radius:20px; overflow:hidden;
+    border:1px solid var(--line); box-shadow:var(--shadow); background:#0C3D26;
+    aspect-ratio:16/9;
+  }
+  .tv-player iframe{width:100%; height:100%; border:0; display:block;}
+  .tv-placeholder{
+    max-width:520px; margin:0 auto; text-align:center; padding:40px 24px;
+    border:1px dashed var(--line); border-radius:16px; color:var(--ink-soft);
+  }
+
   /* ============================= ACTUALITES ============================= */
   .news{background:var(--white);}
   .news-list{display:grid; gap:0; border-top:1px solid var(--line);}
@@ -511,6 +551,7 @@
       <a href="#horaires">Horaires</a>
       <a href="#activites">Activités</a>
       <a href="#galerie">Galerie</a>
+      <a href="#tv">Al-I'tisâm TV</a>
       <a href="#actualites">Actualités</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -524,7 +565,7 @@
       <span class="arabic kicker-ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
       <!-- MODIFIER ICI : titre et texte d'accueil -->
       <h1>Mosquée Al-I'tisâm</h1>
-      <p class="lede">Un lieu de prière, d'enseignement et de vie communautaire au cœur de Lomé, géré par le Comité de Gestion de la Mosquée (COGEMO). Bienvenue à toutes et à tous.</p>
+      <p class="lede" id="heroLede">Un lieu de prière, d'enseignement et de vie communautaire au cœur de Lomé, géré par le Comité de Gestion de la Mosquée (COGEMO). Bienvenue à toutes et à tous.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#horaires">Voir les horaires de prière</a>
         <a class="btn btn-ghost" href="#contact">Nous contacter</a>
@@ -541,6 +582,19 @@
   </svg>
 </section>
 
+<!-- ============================= HORLOGE / CALENDRIER ============================= -->
+<!-- Indépendant de MAWAQIT : simple horloge + date du jour (grégorienne
+     et hijri), calculée directement dans le navigateur du visiteur. -->
+<div class="datebar">
+  <div class="wrap datebar-inner">
+    <span class="datebar-clock" id="clockNow">--:--:--</span>
+    <span class="datebar-sep">•</span>
+    <span class="datebar-date" id="dateGregorian"></span>
+    <span class="datebar-sep">•</span>
+    <span class="datebar-date datebar-hijri" id="dateHijri"></span>
+  </div>
+</div>
+
 <!-- ============================= MOT DE BIENVENUE (COGEMO) ============================= -->
 <!-- MODIFIER ICI : verset et mot de bienvenue du COGEMO -->
 <section class="welcome">
@@ -552,8 +606,8 @@
     </div>
     <div class="welcome-divider"></div>
     <div class="welcome-message">
-      <p class="welcome-fr">Au nom du Comité de Gestion de la Mosquée Al-I'tisâm, nous vous souhaitons la bienvenue dans cette maison d'Allah. Puisse ce lieu être pour chacun un espace de foi, de savoir et de fraternité, à l'image des valeurs qui ont porté sa construction. Que votre visite, votre prière et votre présence parmi nous soient bénies.</p>
-      <p class="arabic welcome-ar">بِاسْمِ لَجْنَةِ تَسْيِيرِ مَسْجِدِ الِاعْتِصَامِ، نُرَحِّبُ بِكُمْ فِي بَيْتِ اللَّهِ هَذَا. نَسْأَلُ اللَّهَ أَنْ يَكُونَ هَذَا الْمَكَانُ لِلْجَمِيعِ فَضَاءً لِلْإِيمَانِ وَالْعِلْمِ وَالْإِخَاءِ، تَجْسِيدًا لِلْقِيَمِ الَّتِي قَامَ عَلَيْهَا بِنَاؤُهُ. بَارَكَ اللَّهُ فِي زِيَارَتِكُمْ وَصَلَاتِكُمْ وَحُضُورِكُمْ بَيْنَنَا.</p>
+      <p class="welcome-fr" id="welcomeFr">Au nom du Comité de Gestion de la Mosquée Al-I'tisâm, nous vous souhaitons la bienvenue dans cette maison d'Allah. Puisse ce lieu être pour chacun un espace de foi, de savoir et de fraternité, à l'image des valeurs qui ont porté sa construction. Que votre visite, votre prière et votre présence parmi nous soient bénies.</p>
+      <p class="arabic welcome-ar" id="welcomeAr">بِاسْمِ لَجْنَةِ تَسْيِيرِ مَسْجِدِ الِاعْتِصَامِ، نُرَحِّبُ بِكُمْ فِي بَيْتِ اللَّهِ هَذَا. نَسْأَلُ اللَّهَ أَنْ يَكُونَ هَذَا الْمَكَانُ لِلْجَمِيعِ فَضَاءً لِلْإِيمَانِ وَالْعِلْمِ وَالْإِخَاءِ، تَجْسِيدًا لِلْقِيَمِ الَّتِي قَامَ عَلَيْهَا بِنَاؤُهُ. بَارَكَ اللَّهُ فِي زِيَارَتِكُمْ وَصَلَاتِكُمْ وَحُضُورِكُمْ بَيْنَنَا.</p>
       <p class="welcome-signature">— Le Comité de Gestion de la Mosquée (COGEMO)</p>
     </div>
   </div>
@@ -598,11 +652,13 @@
     <div class="about-cols">
       <div class="about-block">
         <h3><span class="bullet"></span>Notre histoire</h3>
+        <div id="historyText">
         <p>En 2020, un groupe de frères partageant les mêmes valeurs de solidarité et de fraternité a initié une réflexion autour de la création d'une association dénommée « Famille Courtoisie ». L'objectif initial était de renforcer les liens entre les membres de la communauté, notamment les ressortissants de la préfecture de Cinkassé vivant à Lomé, en organisant des visites fraternelles lors des moments importants de la vie : mariages, baptêmes, événements heureux, mais également dans les moments d'épreuve, notamment les périodes de deuil.</p>
         <p>Cette dynamique s'est également traduite par des actions communautaires, comme l'entretien du cimetière musulman de Lomé, témoignant de l'importance accordée à la solidarité et au respect des valeurs islamiques.</p>
         <p>Au fil des rencontres, un constat est apparu : la communauté des ressortissants de la préfecture de Cinkassé ne disposait pas encore à Lomé d'un lieu de culte et de rassemblement permettant de se retrouver, de prier ensemble et de renforcer les liens fraternels, à l'image d'autres communautés déjà organisées. C'est ainsi qu'est née l'ambition de construire un lieu dédié à la prière, à l'apprentissage et à la vie communautaire : la Mosquée Al-I'tisâm.</p>
         <p>Pour concrétiser ce projet, des démarches de mobilisation et de collecte de dons ont été engagées auprès de la communauté. Le Comité de Gestion de la Mosquée (COGEMO Al-I'tisâm) a alors été créé afin d'assurer la centralisation des contributions, le suivi administratif et l'accompagnement du projet de construction.</p>
         <p>Les travaux de construction ont débuté en décembre 2023 avec les premiers travaux préparatoires et se sont achevés fin 2025, grâce à la mobilisation et à la générosité des contributeurs. L'ouverture officielle de la Mosquée Al-I'tisâm est prévue en 2026, marquant l'aboutissement d'un projet porté par la foi, la solidarité et l'engagement collectif.</p>
+        </div>
       </div>
       <div class="about-block">
         <h3><span class="bullet"></span>Mission et valeurs</h3>
@@ -622,10 +678,10 @@
       <div class="about-block">
         <h3><span class="bullet"></span>Organisation interne</h3>
         <ul class="org-list" id="orgList">
-          <li><span>Président</span><span id="orgPresident">El Hadj Issa Parkouda</span></li>
-          <li><span>Vice-président, chargé de la trésorerie</span><span id="orgVp">Dr Yézidou Ali</span></li>
-          <li><span>Secrétaire</span><span id="orgSecretaire">M. Aboubakar Ibrahime</span></li>
-          <li><span>Imam</span><span id="orgImam">À compléter</span></li>
+          <li><span>Président</span><span>El Hadj Issa Parkouda</span></li>
+          <li><span>Vice-président, chargé de la trésorerie</span><span>Dr Yézidou Ali</span></li>
+          <li><span>Secrétaire</span><span>M. Aboubakar Ibrahime</span></li>
+          <li><span>Imam</span><span>À compléter</span></li>
         </ul>
       </div>
     </div>
@@ -701,6 +757,36 @@
       <div class="gal-item"><span class="cat">Aïd</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v3"/><path d="M4 21h16l-2-9H6l-2 9Z"/><path d="M9 12V9a3 3 0 0 1 6 0v3"/></svg><span>Photo à ajouter</span></div>
       <div class="gal-item"><span class="cat">Cours</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2Z"/><path d="M6 17h13"/></svg><span>Photo à ajouter</span></div>
       <div class="gal-item"><span class="cat">Activités</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/></svg><span>Photo à ajouter</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= AL-I'TISÂM TV ============================= -->
+<!-- Contenu géré depuis /admin via content/youtube.json (un seul champ :
+     l'ID de la chaîne YouTube). Tant qu'il est vide, la section affiche
+     un message de configuration au lieu de liens cassés. -->
+<section class="tv" id="tv">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Al-I'tisâm TV</h2>
+      <p class="lede">Nos conférences, cours et événements en vidéo — suivez-nous aussi en direct.</p>
+    </div>
+
+    <div id="tvConfigured" style="display:none;">
+      <div class="tv-actions">
+        <a id="tvLive" class="btn btn-primary" href="#" target="_blank" rel="noopener">
+          <span class="tv-dot"></span> Voir en direct
+        </a>
+        <a id="tvChannel" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Voir la chaîne</a>
+        <a id="tvSubscribe" class="btn btn-gold" href="#" target="_blank" rel="noopener">S'abonner</a>
+      </div>
+      <div class="tv-player">
+        <iframe id="tvPlaylist" src="" title="Dernières vidéos — Al-I'tisâm TV" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div id="tvUnconfigured" class="tv-placeholder">
+      <p>La chaîne YouTube sera bientôt reliée ici.</p>
     </div>
   </div>
 </section>
@@ -904,12 +990,55 @@
     });
   }).catch(() => {});
 
-  fetch('content/organisation.json').then(r => r.ok ? r.json() : null).then(data => {
+  // Horloge + date du jour (grégorienne et hijri), indépendante de MAWAQIT.
+  function tickClock(){
+    const now = new Date();
+    document.getElementById('clockNow').textContent =
+      now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  try{
+    const now = new Date();
+    document.getElementById('dateGregorian').textContent =
+      now.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    document.getElementById('dateHijri').textContent =
+      now.toLocaleDateString('fr-FR-u-ca-islamic-umalqura', { day:'numeric', month:'long', year:'numeric' }) + ' H';
+  }catch(e){
+    // Si le calendrier hijri n'est pas supporté par le navigateur, on
+    // masque juste cette partie plutôt que d'afficher une erreur.
+    const h = document.getElementById('dateHijri');
+    if(h) h.style.display = 'none';
+  }
+
+  fetch('content/about.json').then(r => r.ok ? r.json() : null).then(data => {
     if(!data) return;
-    if(data.president) document.getElementById('orgPresident').textContent = data.president;
-    if(data.vice_president) document.getElementById('orgVp').textContent = data.vice_president;
-    if(data.secretaire) document.getElementById('orgSecretaire').textContent = data.secretaire;
-    if(data.imam) document.getElementById('orgImam').textContent = data.imam;
+    if(data.hero_lede) document.getElementById('heroLede').textContent = data.hero_lede;
+    if(data.welcome_fr) document.getElementById('welcomeFr').textContent = data.welcome_fr;
+    if(data.welcome_ar) document.getElementById('welcomeAr').textContent = data.welcome_ar;
+    if(data.histoire){
+      const container = document.getElementById('historyText');
+      container.innerHTML = '';
+      data.histoire.split(/\n\s*\n/).forEach(paragraph => {
+        if(paragraph.trim()){
+          const p = document.createElement('p');
+          p.textContent = paragraph.trim();
+          container.appendChild(p);
+        }
+      });
+    }
+  }).catch(() => {});
+
+  fetch('content/organisation.json').then(r => r.ok ? r.json() : null).then(data => {
+    if(!data || !Array.isArray(data.items) || data.items.length === 0) return;
+    const list = document.getElementById('orgList');
+    list.innerHTML = '';
+    data.items.forEach(person => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${person.role || ''}</span><span>${person.name || ''}</span>`;
+      list.appendChild(li);
+    });
   }).catch(() => {});
 
   fetch('content/social.json').then(r => r.ok ? r.json() : null).then(data => {
@@ -928,6 +1057,17 @@
         el.style.display = '';
       }
     });
+  }).catch(() => {});
+
+  fetch('content/youtube.json').then(r => r.ok ? r.json() : null).then(data => {
+    const id = data && data.channel_id ? data.channel_id.trim() : '';
+    if(!id) return; // reste sur le message "bientôt reliée"
+    document.getElementById('tvLive').href = `https://www.youtube.com/channel/${id}/live`;
+    document.getElementById('tvChannel').href = `https://www.youtube.com/channel/${id}`;
+    document.getElementById('tvSubscribe').href = `https://www.youtube.com/channel/${id}?sub_confirmation=1`;
+    document.getElementById('tvPlaylist').src = `https://www.youtube.com/embed/videoseries?list=UU${id.slice(2)}`;
+    document.getElementById('tvConfigured').style.display = '';
+    document.getElementById('tvUnconfigured').style.display = 'none';
   }).catch(() => {});
 
   // Menu mobile
