@@ -1,6 +1,8 @@
 {
-  "president": "El Hadj Issa Parkouda",
-  "vice_president": "Dr Yézidou Ali",
-  "secretaire": "M. Aboubakar Ibrahime",
-  "imam": "À compléter"
+  "items": [
+    { "role": "Président", "name": "El Hadj Issa Parkouda" },
+    { "role": "Vice-président, chargé de la trésorerie", "name": "Dr Yézidou Ali" },
+    { "role": "Secrétaire", "name": "M. Aboubakar Ibrahime" },
+    { "role": "Imam", "name": "À compléter" }
+  ]
 }
