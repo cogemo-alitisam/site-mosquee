@@ -315,6 +315,25 @@
   .jumua .name-ar{font-family:'Amiri',serif; direction:rtl; font-size:1.3rem;}
   .jumua .time{font-size:1.9rem; font-weight:700; font-family:'Cormorant Garamond',serif;}
 
+  .countdown-box{
+    max-width:420px; margin:28px auto 0; text-align:center;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18);
+    border-radius:18px; padding:20px 24px;
+  }
+  .countdown-label{
+    display:block; font-size:.78rem; letter-spacing:.04em; color:#9FBFAA;
+    text-transform:uppercase; margin-bottom:6px;
+  }
+  .countdown-name{
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:1.3rem;
+    color:var(--gold-light); margin-right:10px;
+  }
+  .countdown-time{
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:1.6rem;
+    color:var(--white); font-variant-numeric:tabular-nums;
+  }
+  .countdown-note{ display:block; font-size:.72rem; color:#9FBFAA; margin-top:6px; }
+
   .mawaquit-note{
     margin-top:28px; text-align:center; color:#CFE3D6; font-size:.92rem;
   }
@@ -459,6 +478,15 @@
     max-width:520px; margin:0 auto; text-align:center; padding:40px 24px;
     border:1px dashed var(--line); border-radius:16px; color:var(--ink-soft);
   }
+  .tv-mecca{
+    max-width:800px; margin:48px auto 0; padding-top:40px;
+    border-top:1px dashed var(--line);
+  }
+  .tv-mecca-title{ text-align:center; color:var(--green-deep); margin-bottom:6px; }
+  .tv-mecca-note{
+    text-align:center; font-size:.82rem; color:var(--ink-soft);
+    margin-bottom:18px; font-style:italic;
+  }
 
   /* ============================= ACTUALITES ============================= */
   .news{background:var(--white);}
@@ -511,6 +539,19 @@
 
   @media (max-width:860px){.contact-grid{grid-template-columns:1fr;}}
 
+  /* ============================= PARTAGE ============================= */
+  .share-bar{ background:var(--cream); border-top:1px solid var(--line); padding:18px 0; }
+  .share-inner{ display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; }
+  .share-label{ font-size:.85rem; color:var(--ink-soft); font-weight:600; }
+  .share-btn{
+    width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+    border-radius:50%; background:var(--white); border:1px solid var(--line);
+    color:var(--green-deep); cursor:pointer; transition:background .18s ease, color .18s ease;
+  }
+  .share-btn svg{ width:18px; height:18px; }
+  .share-btn:hover{ background:var(--green-deep); color:var(--white); border-color:var(--green-deep); }
+  .share-confirm{ font-size:.82rem; color:var(--gold); font-weight:600; }
+
   /* ============================= FOOTER ============================= */
   footer{background:#0C3D26; color:#CFE3D6; padding:56px 0 26px;}
   .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:40px;}
@@ -529,6 +570,7 @@
   @media (max-width:760px){.footer-grid{grid-template-columns:1fr 1fr;}}
   @media (max-width:520px){.footer-grid{grid-template-columns:1fr;}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/adhan@4.4.3/lib/adhan.min.js"></script>
 </head>
 <body>
 
@@ -639,6 +681,15 @@
       <iframe src="//mawaqit.net/fr/w/mosquee-al-i-tisam-lome-99999-togo?showOnly5PrayerTimes=0"
               frameborder="0" scrolling="no" class="widget" title="Horaires de prière — MAWAQIT">
       </iframe>
+    </div>
+
+    <!-- Compte à rebours : calcul indépendant (bibliothèque adhan.js),
+         ne dépend pas du widget Mawaqit ci-dessus. -->
+    <div class="countdown-box">
+      <span class="countdown-label">Prochaine prière</span>
+      <span class="countdown-name" id="countdownName">—</span>
+      <span class="countdown-time" id="countdownTime">--:--:--</span>
+      <span class="countdown-note">Décompte indicatif, calculé automatiquement</span>
     </div>
   </div>
 </section>
@@ -788,6 +839,17 @@
     <div id="tvUnconfigured" class="tv-placeholder">
       <p>La chaîne YouTube sera bientôt reliée ici.</p>
     </div>
+
+    <!-- Bloc distinct : diffusion d'une chaîne externe (La Mecque), non
+         liée à Al-I'tisâm TV. Source choisie et modifiable par le COGEMO
+         via /admin (content/youtube.json → mecca_video_id). -->
+    <div id="meccaBlock" class="tv-mecca" style="display:none;">
+      <h3 class="tv-mecca-title">🕋 En direct de La Mecque</h3>
+      <p class="tv-mecca-note">Diffusion d'une chaîne officielle externe, non affiliée à la Mosquée Al-I'tisâm.</p>
+      <div class="tv-player">
+        <iframe id="meccaPlayer" src="" title="En direct de La Mecque" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -890,6 +952,23 @@
   </div>
 </section>
 
+<!-- ============================= PARTAGE ============================= -->
+<div class="share-bar">
+  <div class="wrap share-inner">
+    <span class="share-label">Partagez le site :</span>
+    <a id="shareWhatsapp" href="#" target="_blank" rel="noopener" class="share-btn" aria-label="Partager sur WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-1.4-.7-2.4-1.2-3.3-2.8-.3-.4.3-.4.8-1.3.1-.2 0-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.1-.2-.2-.5-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.3-1.4C8.6 21.5 10.3 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.3-1.1l-.3-.2-3.2.8.9-3.1-.2-.3C4.4 15 4 13.5 4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8z"/></svg>
+    </a>
+    <a id="shareFacebook" href="#" target="_blank" rel="noopener" class="share-btn" aria-label="Partager sur Facebook">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 9H15V6.5h-1.5C11.6 6.5 10 8.1 10 10.2V12H8v3h2v6h3v-6h2.1l.4-3H13v-1.5c0-.5.3-.5.5-.5z"/></svg>
+    </a>
+    <button id="shareCopy" type="button" class="share-btn" aria-label="Copier le lien">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    </button>
+    <span id="shareCopyConfirm" class="share-confirm" style="display:none;">Lien copié !</span>
+  </div>
+</div>
+
 <!-- ============================= FOOTER ============================= -->
 <footer>
   <div class="wrap">
@@ -926,6 +1005,44 @@
 </footer>
 
 <script>
+  // Compte à rebours vers la prochaine prière — calcul indépendant du
+  // widget MAWAQIT (bibliothèque adhan.js, coordonnées de Lomé). Purement
+  // indicatif : en cas de léger écart avec l'écran de la mosquée, c'est
+  // ce dernier qui fait foi.
+  (function(){
+    if(typeof adhan === 'undefined') return; // bibliothèque non chargée : on n'affiche rien de faux
+    const coordinates = new adhan.Coordinates(6.1319, 1.2228); // Lomé, Togo
+    const params = adhan.CalculationMethod.MuslimWorldLeague();
+    const names = { fajr:'Fajr', sunrise:'Chourouq', dhuhr:'Dhuhr', asr:'Asr', maghrib:'Maghrib', isha:'Ichaa' };
+
+    function nextPrayer(){
+      const now = new Date();
+      let date = now;
+      let times = new adhan.PrayerTimes(coordinates, date, params);
+      const order = ['fajr','sunrise','dhuhr','asr','maghrib','isha'];
+      for(const key of order){
+        if(times[key] > now) return { key, time: times[key] };
+      }
+      // Toutes les prières du jour sont passées : on prend le Fajr de demain.
+      const tomorrow = new Date(now.getTime() + 24*3600*1000);
+      times = new adhan.PrayerTimes(coordinates, tomorrow, params);
+      return { key:'fajr', time: times.fajr };
+    }
+
+    function tickCountdown(){
+      const { key, time } = nextPrayer();
+      const diffMs = time - new Date();
+      const h = Math.floor(diffMs / 3600000);
+      const m = Math.floor((diffMs % 3600000) / 60000);
+      const s = Math.floor((diffMs % 60000) / 1000);
+      document.getElementById('countdownName').textContent = names[key];
+      document.getElementById('countdownTime').textContent =
+        `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+  })();
+
   // Horaires de prière : gérés désormais automatiquement par le widget
   // MAWAQIT intégré ci-dessus (section #horaires). Pour changer les
   // horaires, utilisez le tableau de bord sur mawaqit.net — plus besoin
@@ -1069,6 +1186,40 @@
     document.getElementById('tvConfigured').style.display = '';
     document.getElementById('tvUnconfigured').style.display = 'none';
   }).catch(() => {});
+
+  fetch('content/youtube.json').then(r => r.ok ? r.json() : null).then(data => {
+    const meccaId = data && data.mecca_video_id ? data.mecca_video_id.trim() : '';
+    if(!meccaId) return;
+    document.getElementById('meccaPlayer').src = `https://www.youtube.com/embed/${meccaId}`;
+    document.getElementById('meccaBlock').style.display = '';
+  }).catch(() => {});
+
+  // Boutons de partage
+  (function(){
+    const SITE_URL = 'https://mosqueealitisam.tg/';
+    const SITE_TITLE = "Mosquée Al-I'tisâm — Lomé";
+    const encodedUrl = encodeURIComponent(SITE_URL);
+    const encodedText = encodeURIComponent(SITE_TITLE + ' — ' + SITE_URL);
+
+    const wa = document.getElementById('shareWhatsapp');
+    if(wa) wa.href = `https://wa.me/?text=${encodedText}`;
+
+    const fb = document.getElementById('shareFacebook');
+    if(fb) fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+
+    const copyBtn = document.getElementById('shareCopy');
+    const confirmEl = document.getElementById('shareCopyConfirm');
+    if(copyBtn){
+      copyBtn.addEventListener('click', function(){
+        navigator.clipboard.writeText(SITE_URL).then(function(){
+          confirmEl.style.display = '';
+          setTimeout(() => { confirmEl.style.display = 'none'; }, 2500);
+        }).catch(function(){
+          // Copie impossible (navigateur trop ancien) : on ne bloque rien.
+        });
+      });
+    }
+  })();
 
   // Menu mobile
   const menuBtn = document.getElementById('menuBtn');
