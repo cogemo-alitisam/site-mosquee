@@ -87,3 +87,8 @@ collections:
             widget: "string"
             required: false
             hint: "Commence par UC... — voir YouTube Studio > Paramètres > Chaîne > Avancé"
+          - label: "ID de la vidéo en direct de La Mecque"
+            name: "mecca_video_id"
+            widget: "string"
+            required: false
+            hint: "La partie après youtube.com/live/ ou youtube.com/watch?v= dans le lien de la chaîne officielle. Laisser vide pour masquer ce bloc."
