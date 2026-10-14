@@ -69,6 +69,13 @@ collections:
               - { label: "Fonction", name: "role", widget: "string" }
               - { label: "Nom", name: "name", widget: "string" }
 
+      - name: "coordonnees"
+        label: "Coordonnées de contact (email, téléphone)"
+        file: "content/contact.json"
+        fields:
+          - { label: "Email de contact", name: "email", widget: "string" }
+          - { label: "Téléphone", name: "phone", widget: "string" }
+
       - name: "reseaux"
         label: "Réseaux sociaux"
         file: "content/social.json"
